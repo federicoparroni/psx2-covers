@@ -10,7 +10,7 @@ export function useCovers() {
       try {
         const response = await fetch(COVERS_REPO);
         const json: RepoTree = await response.json();
-        console.log(json);
+        // console.log(json);
         setCovers(
           json.tree
             .filter((t) => t.type === "blob")

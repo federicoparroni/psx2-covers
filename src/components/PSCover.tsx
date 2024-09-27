@@ -6,7 +6,15 @@ interface PSCoverProps {
 }
 
 function PSCover({ cover }: PSCoverProps) {
-  const { size, elapsed, percentage, download, cancel, error, isInProgress } = useDownloader();
+  const {
+    // size,
+    // elapsed,
+    percentage,
+    download,
+    cancel,
+    error,
+    isInProgress,
+  } = useDownloader();
 
   const filename = cover.name;
 
