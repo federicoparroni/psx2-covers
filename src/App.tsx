@@ -59,7 +59,7 @@ function App() {
             <div className='card flex flex-row gap-4 flex-wrap justify-center'>
               <input
                 type="text"
-                placeholder='Search by name or serial'
+                placeholder='Search by serial'
                 className='search'
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
@@ -69,18 +69,6 @@ function App() {
                 value={filterVersion}
                 setValue={setFilterVersion}
               />
-              
-              {/* <div className="inline-flex">
-                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
-                  PSX
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
-                  All
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
-                  PS2
-                </button>
-              </div> */}
             </div>
 
             <div className="cover-list w-full flex flex-row flex-wrap gap-y-8 items-center justify-around">
