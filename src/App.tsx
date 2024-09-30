@@ -1,47 +1,62 @@
-import { useCallback, useEffect, useState } from 'react'
-import pslogo from '/pslogo.png'
-import './App.css'
+import { useCallback, useEffect, useState } from 'react';
+import psXlogo from '/psXlogo.png';
+import ps2logo from '/ps2logo.svg';
+import './App.css';
 import { useCovers } from './hooks/useCovers';
-import { RepoTreeFileWithName } from './models/models';
+import { PSX_GH_REPO, PS2_GH_REPO, PsVersion, RepoTreeFileWithName } from './models/models';
 import PSCover from './components/PSCover';
-// import PokemonList from './components/PokemonList';
+import PsVersionSwitch from './components/PsVersionSwitch/PsVersionSwitch';
 
 function App() {
   const { covers, isLoading } = useCovers();
 
   const [filter, setFilter] = useState<string>("");
+  const [filterVersion, setFilterVersion] = useState<PsVersion | undefined>(undefined);
+
   const [filteredCovers, setFilteredCovers] = useState<RepoTreeFileWithName[]>([]);
 
-  const filterCovers = useCallback(() => {
+  const filterCovers = useCallback((filter: string, filterVersion: PsVersion | undefined) => {
+    let res = covers;
+
+    if(filterVersion) {
+      res = res.filter((cover) => cover.psVersion === filterVersion);
+    }
     if (!filter) {
-      return covers?.slice(0, 50);
+      return res?.slice(0, 50);
     }
 
     return covers
       .filter((cover) => cover.name.toLowerCase().includes(filter.toLowerCase()))
       .slice(0, 50);
-  }, [covers, filter]);
+  }, [covers]);
 
   useEffect(() => {
-    setFilteredCovers(filterCovers());
-  }, [covers, filter]);
+    setFilteredCovers(filterCovers(filter, filterVersion));
+  }, [covers, filter, filterVersion]);
 
   return (
     <>
       <div className='w-full flex flex-row justify-center'>
-        <img src={pslogo} className="logo" alt="PS logo" />
+        <img src={psXlogo} className="logo" alt="PSX logo" />
+        <img src={ps2logo} className="logo" alt="PS2 logo" />
       </div>
-      <h1>PSX/PS2 Covers</h1>
-      <a href="https://github.com/xlenore/ps2-covers">
-        https://github.com/xlenore/ps2-covers
-      </a>
+
+      <div className='w-full flex flex-col gap-2 justify-center'>
+        <h1>PSX/PS2 Covers</h1>
+        <a href={`https://github.com/${PSX_GH_REPO}`}>
+          {`https://github.com/${PSX_GH_REPO}`}
+        </a>
+        <a href={`https://github.com/${PS2_GH_REPO}`}>
+          {`https://github.com/${PS2_GH_REPO}`}
+        </a>
+      </div>
 
       {
         isLoading ?
           <h4>Loading...</h4>
           :
           <div>
-            <div className='card'>
+            <div className='card flex flex-row gap-4 flex-wrap justify-center'>
               <input
                 type="text"
                 placeholder='Search by name or serial'
@@ -49,6 +64,23 @@ function App() {
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
               />
+
+              <PsVersionSwitch
+                value={filterVersion}
+                setValue={setFilterVersion}
+              />
+              
+              {/* <div className="inline-flex">
+                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                  PSX
+                </button>
+                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                  All
+                </button>
+                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+                  PS2
+                </button>
+              </div> */}
             </div>
 
             <div className="cover-list w-full flex flex-row flex-wrap gap-y-8 items-center justify-around">
@@ -59,7 +91,6 @@ function App() {
             </div>
           </div>
       }
-
     </>
   )
 }
